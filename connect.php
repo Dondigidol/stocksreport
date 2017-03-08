@@ -1,5 +1,4 @@
 <?php
-
 class ldap_connection
 {
 	var $server;
@@ -45,6 +44,28 @@ class ldap_connection
 	}	
 }
 
+class mssql_connection
+{
+	var $server;
+	var $base;
+	var $user;
+	var $userPW;
+	function get_params($ini_file)
+	{
+		$params_arr = parse_ini_file($ini_file);
+		isset($params_arr['mssql_server']) ? $this->server = $params_arr['mssql_server'] : die('В файле конфигурации нет данных о MSSQL сервере');
+		isset($params_arr['mssql_base']) ? $this->base = $params_arr['mssql_base'] : die('В файле конфигурации нет данных о подключаемой базе MSSQL сервера');
+		isset($params_arr['mssql_user']) ? $this->user = $params_arr['mssql_user'] : die('В файле конфигурации нет данных о логине подключения к MSSQL серверу');
+		isset($params_arr['mssql_password']) ? $this->userPW = $params_arr['mssql_password'] : die('В файле конфигурации нет данных о пароле подключения к MSSQL серверу');
+	}
+	
+	function set_connection()
+	{
+		$link = mssql_connect($this->server, $this->user, $this->userPW) or die("Невозможно подключиться к серверу MSSQL!");
+		mssql_select_db($this->base, $link) or die("Невозможно подключиться к Базе Данных MSSQL!"); 
+	}
+}
+
 function connect_to_ldap($user, $userPW, $ini_file)
 {
 	$ldap = new ldap_connection;
@@ -54,6 +75,11 @@ function connect_to_ldap($user, $userPW, $ini_file)
 	return $ldap->get_result();
 }
 
-
+function connect_to_mssql($ini_file)
+{
+	$mssql = new mssql_connection;
+	$mssql->get_params($ini_file);
+	$mssql->set_connection();
+}
  
 ?>
