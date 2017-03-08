@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+require_once('../connect.php');
+
 $root = 0;
 if ($_SESSION['root'] == 1)
 {
@@ -24,8 +27,7 @@ $freeplacew="80px";//$_POST["freeplacew"];
 $avg_salew="80px";//$_POST["avg_salew"];
 $zapasw="80x";//$_POST["zapasw"];
 //============подключение к MS SQL===================================================
-$link2=mssql_connect("10.84.78.4", "sa", "russi@") or die("Невозможно подключиться к серверу!");
-mssql_select_db("XPERT", $link2) or die("Невозможно подключиться к Базе Данных!"); 
+connect_to_mssql('connect.ini');
 //-----------------------------------------------------------------------------------
 //============подключение к MySQL====================================================
 $link=mysql_connect("localhost","leroy","locadm") or die("Не могу соединиться с MySQL.");
