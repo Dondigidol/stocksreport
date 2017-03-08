@@ -128,7 +128,7 @@ function btnlogin(){
 			success: function(data) {
 				if (data == "true")
 				{
-					location.replace("/handle.php");		
+					location.replace("handle.php");		
 				}
 				else
 				{
