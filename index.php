@@ -128,7 +128,7 @@ function btnlogin(){
 			success: function(data) {
 				if (data == "true")
 				{
-					location.replace("http://10.84.79.233/stocksreport/handle.php");		
+					location.replace("/handle.php");		
 				}
 				else
 				{
