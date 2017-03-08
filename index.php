@@ -136,7 +136,6 @@ function btnlogin(){
 				}
 			}
 		});
-		// location.replace("http://10.84.79.233/stocksreport/handle.php");		
 	} else {
 		$("#alert").html("Заполните все поля");
 	}
