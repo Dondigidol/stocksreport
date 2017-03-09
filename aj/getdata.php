@@ -9,10 +9,8 @@ if ($_SESSION['root'] == 1)
 	$root = 1;
 }
 
-
 $otdel=$_POST["otdel"];
 $top=$_POST["top"];
-//$topw=$_POST["topw"];
 $lmw="85px";//$_POST["lmw"];
 $namew="200px";//$_POST["namew"];
 $kolw="80px";//$_POST["kolw"];
@@ -27,10 +25,10 @@ $freeplacew="80px";//$_POST["freeplacew"];
 $avg_salew="80px";//$_POST["avg_salew"];
 $zapasw="80x";//$_POST["zapasw"];
 //============подключение к MS SQL===================================================
-connect_to_mssql('connect.ini');
+connect_to_mssql('config.ini');
 //-----------------------------------------------------------------------------------
 //============подключение к MySQL====================================================
-connect_to_mysql('connect.ini');
+connect_to_mysql('config.ini');
 //-----------------------------------------------------------------------------------
 
 $curdate=date("Ymd");
@@ -93,7 +91,7 @@ while ($result2=mssql_fetch_array($sql2)){
 }
 
 $str='';
-for ($k=0; $k<=count($rep); $k++){
+for ($k=0; $k<count($rep); $k++){
 	if ($k%2==0){
 		$bgcolor="#dedede";
 	}

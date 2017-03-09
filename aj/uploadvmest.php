@@ -5,16 +5,17 @@ if (isset($_SESSION['root']) == false)
 	header ('Location: index.php');
 	session_destroy();
 }
-require_once('Classes/PHPExcel.php');
+require_once 'Classes/PHPExcel.php';
+require_once '../connect.php';
+
+$config_file = 'config.ini';
 
 $filename = $_POST["filename"];
 
 $path = "../jquery-file-upload/server/php/files/" . $filename;
 if (file_exists($path))
 {
-	$link=mysql_connect("localhost","leroy","locadm") or die("Не могу соединиться с MySQL.");
-	mysql_select_db("leroy_stocksreport",$link) or die("Не могу подключиться к базе.");
-	mysql_query("SET NAMES 'utf8'");
+	connect_to_mysql($config_file);
 	
 	$j = 0;
 	$objPHPExcel= new PHPExcel();

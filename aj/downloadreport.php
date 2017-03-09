@@ -3,7 +3,10 @@ session_start();
 
 require_once "Classes/php_writeexcel/class.writeexcel_workbook.inc.php";
 require_once "Classes/php_writeexcel/class.writeexcel_worksheet.inc.php";
+require_once "../connect.php";
 header('Content-Type: text/html; charset=utf-8');
+
+$conf_file = 'config.ini';
 
 if (isset($_SESSION['root']) == false)
 {
@@ -30,14 +33,10 @@ $fizapas = $_GET["fizapas"];
 
 
 //============подключение к MS SQL===================================================
-$link2=mssql_connect("10.84.78.4", "sa", "russi@") or die("Невозможно подключиться к серверу!");
-mssql_select_db("XPERT", $link2) or die("Невозможно подключиться к Базе Данных!"); 
+connect_to_mssql($config_file);
 //-----------------------------------------------------------------------------------
 //============подключение к MySQL====================================================
-$link=mysql_connect("localhost","leroy","locadm") or die("Не могу соединиться с MySQL.");
-mysql_select_db("leroy_stocks",$link) or die("Не могу подключиться к базе.");
-mysql_query("SET NAMES 'utf8'");
-ini_set('max_execution_time', 720);
+connect_to_mysql($config_file);
 //-----------------------------------------------------------------------------------
 
 $curdate=date("Ymd");
