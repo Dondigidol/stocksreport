@@ -84,7 +84,9 @@ class mysql_connection
 	function set_connection()
 	{
 		$link = mysql_connect($this->server, $this->user, $this->userPW) or die("Невозможно подключиться к серверу MySQL!");
-		mysql_select_db($this->base, $link) or die("Невозможно подключиться к Базе Данных MySQL!"); 
+		mysql_select_db($this->base, $link) or die("Невозможно подключиться к Базе Данных MySQL!");
+		mysql_query("SET NAMES 'utf8'");
+		ini_set('max_execution_time', 720);
 	}
 }
 
