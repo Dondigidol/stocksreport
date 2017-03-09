@@ -30,10 +30,7 @@ $zapasw="80x";//$_POST["zapasw"];
 connect_to_mssql('connect.ini');
 //-----------------------------------------------------------------------------------
 //============подключение к MySQL====================================================
-$link=mysql_connect("localhost","leroy","locadm") or die("Не могу соединиться с MySQL.");
-mysql_select_db("leroy_stocks",$link) or die("Не могу подключиться к базе.");
-mysql_query("SET NAMES 'utf8'");
-ini_set('max_execution_time', 720);
+connect_to_mysql('connect.ini');
 //-----------------------------------------------------------------------------------
 
 $curdate=date("Ymd");
