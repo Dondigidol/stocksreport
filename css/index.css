@@ -1,3 +1,8 @@
+*{
+margin:0;
+padding:0;
+}
+
 #main {
 	display:block;
 	width:1198px;
@@ -8,8 +13,9 @@
 
 #menupanel {
 	height: 40px;
-	margin-top: -10px;
+	/* margin-top: -10px; */
 	background: #a0dea0;
+	margin: 0;
 }
 
 #menupanel table{
@@ -75,7 +81,7 @@
 }
 
 #footer {
-	height: 15px;
+	height: 20px;
 	background: #a0dea0;
 	font: 10px Helvetica, Arial, sans-serif;
 }
