@@ -48,46 +48,42 @@ $query_str = ("SELECT pr.product_code as lm, name.short_name as name, (ISNULL(st
 				WHERE prod_g.group_code = '1' and art.top_repl = '1' and (ISNULL(stock_rd.kol, 0) + ISNULL(stock_rm.kol, 0) + ISNULL(stock_em.kol, 0) + ISNULL(stock_ls.kol, 0) > 0)");
 				
 
-$sql2=mssql_query($query_str);
+$sql=mssql_query($query_str);
 
 $i=0;
-while ($result2=mssql_fetch_array($sql2)){
+while ($result=mssql_fetch_array($sql)){
 	$query_str2 = '';
-	$lm = $result2["lm"];
-	$name = $result2["name"];
-	$kol = $result2["kol"];
-	$rd = $result2["rd"];
-	$rm = $result2["rm"];
-	$em = $result2["em"];
-	$ls = $result2["ls"];
-	$avg_sale = $result2["avg_sale"];
-	
-	$query_str2 = ("SET @ls = (SELECT IFNULL(" . $ls . ", 0));
-					SET @avg_sale = (SELECT IFNULL(" . $avg_sale . ", 0));
-					SET @cap = (SELECT IFNULL(SUM(kol), 0) FROM leroy_stocksreport.capacity WHERE lm= " . $lm . ");
-					SELECT IFNULL(SUM(kol), 0) as top_stocks, (@ls - IFNULL(SUM(kol), 0)) as polka, @cap as capacity, @cap - (@ls - IFNULL(SUM(kol), 0)) as freeplace, ((@ls - IFNULL(SUM(kol), 0)) / @avg_sale) as zapas
-					FROM leroy_stocks.stocks
-					WHERE lm = " . $lm . " AND otdel = " . $otdel);
-			
-	$sql=mysql_query($query_str2);
-	
-	$top_stocks=mysql_fetch_array($sql);
-	echo "<script>alert('" . $top_stocks . "');</script>";
-		$rep[$i]["lm"]=$lm;
-		$rep[$i]["name"]=$name;
-		$rep[$i]["kol"] = $kol;
-		$rep[$i]["rd"] =$rd;
-		$rep[$i]["rm"] =$rm;
-		$rep[$i]["em"] =$em;
-		$rep[$i]["ls"] =$ls;
-		$rep[$i]["AVG_SALE"] =round($avg_sale,1);
-		$rep[$i]["top_stocks"] =$top_stocks["top_stocks"];
-		$rep[$i]["polka"] = $top_stocks["polka"];
-		$rep[$i]["capacity"] =$top_stocks["capacity"];
-		$rep[$i]["freeplace"] = $top_stocks["freeplace"];
-		$rep[$i]["zapas"] = $top_stocks["zapas"];
+	$lm = $result["lm"];
+	$name = $result["name"];
+	$kol = $result["kol"];
+	$rd = $result["rd"];
+	$rm = $result["rm"];
+	$em = $result["em"];
+	$ls = $result["ls"];
+	$avg_sale = round($result["avg_sale"], 2);
 		
-		$i++;
+	$sql2 = mysql_query('SELECT IFNULL(cap.kol, 0) as capacity, IFNULL(stock.kol, 0) as top_stocks, (' . $ls . ' - IFNULL(SUM(stock.kol), 0)) as polka, IFNULL(cap.kol, 0) - (' . $ls . ' - IFNULL(SUM(stock.kol), 0)) as freeplace, ((' . $ls . ' - IFNULL(SUM(stock.kol), 0)) / ' . $avg_sale . ') as zapas
+						FROM leroy_stocksreport.capacity as cap
+						LEFT JOIN (SELECT lm, kol FROM leroy_stocks.stocks WHERE otdel = ' . $otdel . ') stock ON stock.lm = ' . $lm . '
+						WHERE cap.lm = '. $lm);
+	
+	$top_stocks=mysql_fetch_array($sql2);
+	
+	$rep[$i]["lm"]=$lm;
+	$rep[$i]["name"]=$name;
+	$rep[$i]["kol"] = $kol;
+	$rep[$i]["rd"] =$rd;
+	$rep[$i]["rm"] =$rm;
+	$rep[$i]["em"] =$em;
+	$rep[$i]["ls"] =$ls;
+	$rep[$i]["AVG_SALE"] = $avg_sale;
+	$rep[$i]["top_stocks"] =$top_stocks["top_stocks"];
+	$rep[$i]["polka"] = $top_stocks["polka"];
+	$rep[$i]["capacity"] =$top_stocks["capacity"];
+	$rep[$i]["freeplace"] = $top_stocks["freeplace"];
+	$rep[$i]["zapas"] = round($top_stocks["zapas"], 1);
+	
+	$i++;
 }
 
 $str='';
