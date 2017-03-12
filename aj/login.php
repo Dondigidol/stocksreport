@@ -5,7 +5,7 @@ require_once '../connect.php';
 $user = $_POST["user"];
 $userPW = $_POST["userPW"];
 
-$data = connect_to_ldap($user, $userPW, 'connect.ini');
+$data = connect_to_ldap($user, $userPW, 'config.ini');
 
 $jobs = array('специалист по информационным технологиям',
 				'менеджер отдела',
