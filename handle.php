@@ -299,7 +299,7 @@ $(function () {
 });
 
 $(document).ready(function(){
-	$("#main").css({"height":$(document).height() - $("#menupanel").height() - $("#footer").height() - 6 + "px"});
+	$("#main").css({"height":$(document).height() - $("#menupanel").height() - $("#footer").height() + "px"});
 	$("#tablecontent").css({"height":$("#main").height() - $("#tableheader").height() + "px"});
 	$(".modal_bg, .modal_window").hide();
 });
