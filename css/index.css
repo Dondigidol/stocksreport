@@ -60,23 +60,28 @@ padding:0;
 	width: 1198px;
 }
 
+
 .rowel{
 	display: block;
+	/* width:1183px; */
 }
 
-.rowel table{
+.contable{
 	margin: 0 auto;
 	border-collapse:collapse;	
-	width:1181px;	
+/* 	width:1183px; */
+	border: 0px solid black;
+	padding: -1px;
 }
 
 .rowel td{
+	/* border: 1px solid black; */
 	border-right: 1px solid;
 	border-left: 1px solid;
 	border-bottom: 1px solid;
 	text-align: center;
 	font: 10px Helvetica, Arial, sans-serif;
-	padding: 0px 0;
+/* 	padding: 0px 0; */
 	word-wrap: break-word;
 }
 
