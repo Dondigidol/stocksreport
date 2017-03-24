@@ -81,7 +81,7 @@ class mssql_connection
 			$result = array();
 			try 
 			{					
-				ini_set('max_execution_time', 1000);
+				ini_set('max_execution_time', 2000);
 				$arr = odbc_exec($this->conn, $query_str);
 				while($val = odbc_fetch_array($arr))
 				{
