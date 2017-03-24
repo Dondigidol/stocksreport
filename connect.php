@@ -81,15 +81,12 @@ class mssql_connection
 			$result = array();
 			try 
 			{					
-				ini_set('max_execution_time', 720);
+				ini_set('max_execution_time', 1000);
 				$arr = odbc_exec($this->conn, $query_str);
 				while($val = odbc_fetch_array($arr))
 				{
 					array_push($result, $val);
-				}
-				// $result = iconv("UTF-8", "CP1252", $result);
-				// odbc_free_result($result);
-				// return $data;				
+				}			
 			}
 			catch (Exception $e)
 			{
