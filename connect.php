@@ -78,15 +78,20 @@ class mssql_connection
 	{
 		if (isset($this->conn))
 		{
-			$result = array();
 			try 
 			{					
 				ini_set('max_execution_time', 2000);
 				$arr = odbc_exec($this->conn, $query_str);
-				while($val = odbc_fetch_array($arr))
+				$query_type = explode(' ', $query_str);
+				if (strtoupper($query_type[0]) == 'SELECT')
 				{
-					array_push($result, $val);
-				}			
+					$result = array();
+					while($val = odbc_fetch_array($arr))
+					{
+						array_push($result, $val);
+					}		
+					return $result;
+				}					
 			}
 			catch (Exception $e)
 			{
@@ -94,7 +99,7 @@ class mssql_connection
 			}
 			finally
 			{
-				return $result;//$data[];
+				// return $result;//$data[];
 			}
 		}
 	}
