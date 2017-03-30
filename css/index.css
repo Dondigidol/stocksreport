@@ -31,21 +31,22 @@ padding:0;
 	width: 1198px;
 }
 
-#tableheader table{
+.table {
 	border-collapse:collapse;	
-	width:1181px;
+	/* width:1181px; */
 }
 
-#tableheader td{
+.table td{
 	border: 1px solid;
 	text-align: center;
 	font: 10px Helvetica, Arial, sans-serif;
-	padding: 2px 0;
+	padding: 1px 0;
 	word-wrap: break-word;
 }
 
-#tableheader input{
+.table input{
 	width: 50px;
+	font: 10px Helvetica, Arial, sans-serif;
 }
 
 .filters {
@@ -57,32 +58,6 @@ padding:0;
 	background: #ebebeb;
 	float:left;
 	overflow-y: scroll;
-	width: 1198px;
-}
-
-
-.rowel{
-	display: block;
-	/* width:1183px; */
-}
-
-.contable{
-	margin: 0 auto;
-	border-collapse:collapse;	
-/* 	width:1183px; */
-	border: 0px solid black;
-	padding: -1px;
-}
-
-.rowel td{
-	/* border: 1px solid black; */
-	border-right: 1px solid;
-	border-left: 1px solid;
-	border-bottom: 1px solid;
-	text-align: center;
-	font: 10px Helvetica, Arial, sans-serif;
-/* 	padding: 0px 0; */
-	word-wrap: break-word;
 }
 
 #footer {
