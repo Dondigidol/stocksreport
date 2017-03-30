@@ -1,7 +1,18 @@
 <?php
 session_start();
+if (isset($_SESSION["ldap"]) == False){
+	session_destroy();
+	header ('Location: index.php');
+}
+else
+{
+	$ldap = $_SESSION["ldap"];	
+	$username = $_SESSION['username'];
+	$root = $_SESSION['root'];
+	$job = $_SESSION['job'];
+}
 ?>
- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
  <html>
 	<head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -86,18 +97,6 @@ session_start();
     </head>
 	<body align="center">
 <?php
-if (isset($_SESSION["ldap"]) == False){
-	header ('Location: index.php');
-	session_destroy();
-}
-else
-{
-	$ldap = $_SESSION["ldap"];	
-	$username = $_SESSION['username'];
-	$root = $_SESSION['root'];
-	$job = $_SESSION['job'];
-}
-
 //ширина столбцов
 //$topw='50px';
 $lmw='85px';
@@ -109,7 +108,7 @@ $emw='80px';
 $lsw='80px';
 $topstockw='80px';
 $polkaw='80px';
-$capacityw='80px';
+$facew='80px';
 $freeplacew='80px';
 $avg_salew='80px';
 $zapasw='80px';
@@ -193,13 +192,13 @@ function sel($con){
 </div>
 <div id='main'>
 <div id="tableheader">
-		<table>
+		<table class = "table">
 		<tr style='background: #9cb1f0;'>			
 			<td rowspan=3 width='<?php echo $lmw;?>'>ЛМ</td>
 			<td rowspan=3 width='<?php echo $namew;?>'>Наименование</td>
 			<td colspan=6>Размещение</td>
 			<td rowspan=3 width='<?php echo $polkaw;?>'>Полка</td>
-			<td rowspan=3 width='<?php echo $capacityw;?>'>Вместимость полки</td>
+			<td rowspan=3 width='<?php echo $facew;?>'>Вместимость полки</td>
 			<td rowspan=3 width='<?php echo $freeplacew;?>'>Кол-во свободного места, шт.</td>
 			<td rowspan=3 width='<?php echo $avg_salew;?>'>Среднедневная продажа</td>
 			<td rowspan=3 width='<?php echo $zapasw;?>'>Запас в днях на полке</td>
@@ -226,7 +225,7 @@ function sel($con){
 			<td><?php sel("conLs");?></td>
 			<td><?php sel("conStock");?></td>
 			<td><?php sel("conPolka");?></td>
-			<td><?php sel("conCap");?></td>
+			<td><?php sel("conFace");?></td>
 			<td><?php sel("conFree");?></td>
 			<td><?php sel("conSale");?></td>
 			<td><?php sel("conZapas");?></td>
@@ -241,7 +240,7 @@ function sel($con){
 			<td><input type=number id='fils' oninput='change()'></td>
 			<td><input type=number id='fistock' oninput='change()'></td>
 			<td><input type=number id='fipolka' oninput='change()'></td>
-			<td><input type=number id='ficap' oninput='change()'></td>
+			<td><input type=number id='fiface' oninput='change()'></td>
 			<td><input type=number id='fifree' oninput='change()'></td>
 			<td><input type=number id='fisale'oninput='change()'></td>
 			<td><input type=number id='fizapas' oninput='change()'></td>
@@ -270,7 +269,7 @@ $(function () {
 			$.each(data.files, function (index, file) {
 				$.ajax({
 					type: "POST",
-					url: "aj/uploadvmest.php",
+					url: "aj/uploadface.php",
 					data: {filename: file.name},
 					success: function(data){
 						$(".modal_bg, .modal_window").hide();
@@ -300,7 +299,7 @@ $(function () {
 
 $(document).ready(function(){
 	$("#main").css({"height":$(document).height() - $("#menupanel").height() - $("#footer").height() + "px"});
-	$("#tablecontent").css({"height":$("#main").height() - $("#tableheader").height() + "px"});
+	$("#tablecontent").css({"height":$("#main").height() - $("#tableheader").height() + "px", "width":$("#tableheader").width() + "px"});
 	$(".modal_bg, .modal_window").hide();
 });
 
@@ -342,12 +341,12 @@ function exportData()
 	var fils = oper($("#conLs").val(), $("#fils").val());
 	var fistock = oper($("#conStock").val(), $("#fistock").val());
 	var fipolka = oper($("#conPolka").val(), $("#fipolka").val());
-	var ficap = oper($("#conCap").val(), $("#ficap").val());
+	var fiface = oper($("#conFace").val(), $("#fiface").val());
 	var fifree = oper($("#conFree").val(), $("#fifree").val());
 	var fisale = oper($("#conSale").val(), $("#fisale").val());
 	var fizapas = oper($("#conZapas").val(), $("#fizapas").val());
 
-	document.location.href="aj/downloadreport.php?otdel=" + otdel + "&top=" + top + "&film=" + film + "&finame=" + finame + "&fikol=" + fikol + "&fird=" + fird + "&firm=" + firm + "&fiem=" + fiem + "&fils=" + fils + "&fistock=" + fistock + "&fipolka=" + fipolka + "&ficap=" + ficap + "&fifree=" + fifree + "&fisale=" + fisale + "&fizapas=" + fizapas;
+	document.location.href="aj/downloadreport.php?otdel=" + otdel + "&top=" + top + "&film=" + film + "&finame=" + finame + "&fikol=" + fikol + "&fird=" + fird + "&firm=" + firm + "&fiem=" + fiem + "&fils=" + fils + "&fistock=" + fistock + "&fipolka=" + fipolka + "&fiface=" + fiface + "&fifree=" + fifree + "&fisale=" + fisale + "&fizapas=" + fizapas;
 
 	
 }
@@ -378,7 +377,7 @@ function getData()
 		"lsw": "<?php echo $lsw;?>",
 		"topstockw": "<?php echo $topstockw;?>",
 		"polkaw": "<?php echo $polkaw;?>",
-		"capacityw": "<?php echo $capacityw;?>",
+		"facew": "<?php echo $facew;?>",
 		"freeplacew": "<?php echo $freeplacew;?>",
 		"avg_salew": "<?php echo $avg_salew;?>",
 		"zapasw": "<?php echo $zapasw;?>" },
@@ -400,18 +399,18 @@ function getData()
 	
 }
 
-function addvmest(editid)
+function addface(editid)
 {
 	var position = editid.id.split("position");
-	document.getElementById(position[0]+"vmest"+position[1]).disabled=0;
-	document.getElementById(position[0]+"vmest"+position[1]).focus();
+	document.getElementById(position[0]+"face"+position[1]).disabled=0;
+	document.getElementById(position[0]+"face"+position[1]).focus();
 	
 }
 
-function savevmest(editid)
+function saveface(editid)
 {
 	
-	var position=editid.id.split("vmest");
+	var position=editid.id.split("face");
 	lm=position[1];
 	pos=position[0];
 	
@@ -422,7 +421,7 @@ function savevmest(editid)
 	
 	$.ajax({
 		type: "POST",
-		url: "aj/vmesttobase.php",
+		url: "aj/facetobase.php",
 		data: {"lm":lm, "kol": kol},
 		success: function(){
 			document.getElementById(editid.id).disabled=1;
@@ -448,8 +447,8 @@ function mod_mes(mes)
 function qwe(op1, op2, oper)
 {
 	if (op2!=""){
-		op1 = parseInt(op1);
-		op2 = parseInt(op2);
+		op1 = parseFloat(op1);
+		op2 = parseFloat(op2);
 		if (oper=="равно"){
 			var res = op1==op2;
 		}else if (oper=="больше"){
@@ -475,7 +474,7 @@ function change()
 	var conls=$("#conLs").val();
 	var constock=$("#conStock").val();
 	var conpolka=$("#conPolka").val();
-	var concap=$("#conCap").val();
+	var conface=$("#conFace").val();
 	var confree=$("#conFree").val();
 	var consale=$("#conSale").val();
 	var conzapas=$("#conZapas").val();
@@ -490,7 +489,7 @@ function change()
 	var fils=$("#fils").val();
 	var fistock=$("#fistock").val();
 	var fipolka=$("#fipolka").val();
-	var ficap=$("#ficap").val();
+	var fiface=$("#fiface").val();
 	var fifree=$("#fifree").val();
 	var fisale=$("#fisale").val();
 	var fizapas=$("#fizapas").val();
@@ -504,7 +503,7 @@ function change()
 	var templs;
 	var tempstock;
 	var temppolka;
-	var tempcap;
+	var tempface;
 	var tempfree;
 	var tempsale;
 	var tempzapas;
@@ -522,7 +521,7 @@ function change()
 		templs=$("#ls"+i).html();
 		tempstock=$("#stock"+i).html();
 		temppolka=$("#polka"+i).html();
-		tempcap=$(".cap"+i).val();
+		tempface=$("#face"+i).val();
 		tempfree=$("#free"+i).html();
 		tempsale=$("#sale"+i).html();
 		tempzapas=$("#zapas"+i).html();
@@ -536,18 +535,18 @@ function change()
 			&& (qwe(templs, fils, conls)==true) //поиск по количеству rd
 			&& (qwe(tempstock, fistock, constock)==true) //поиск по количеству rd
 			&& (qwe(temppolka, fipolka, conpolka)==true) //поиск по количеству rd
-			&& (qwe(tempcap, ficap, concap)==true) //поиск по количеству rd
+			&& (qwe(tempface, fiface, conface)==true) //поиск по количеству rd
 			&& (qwe(tempfree, fifree, confree)==true) //поиск по количеству rd
 			&& (qwe(tempsale, fisale, consale)==true) //поиск по количеству rd
 			&& (qwe(tempzapas, fizapas, conzapas)==true) //поиск по количеству rd
 			)
 		{
 			sort_kol = sort_kol + 1;
-			$("#row"+i).css({"display":"block"});			
+			$("#row"+i).show();			
 		}
 		else 
 		{
-			$("#row"+i).css({"display":"none"});
+			$("#row"+i).hide();
 		}
 		
 	}
