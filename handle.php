@@ -383,9 +383,17 @@ function getData()
 		"avg_salew": "<?php echo $avg_salew;?>",
 		"zapasw": "<?php echo $zapasw;?>" },
 		success: function(data){
-			$("#tablecontent").html(data);
-			change();
-			$(".modal_bg, .modal_window").hide();
+			try
+			{
+				$("#tablecontent").html(data);
+				change();
+			}
+			finally
+			{
+				$(".modal_bg, .modal_window").hide();				
+			}
+			
+			
 		}
 	});
 
