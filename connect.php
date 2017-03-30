@@ -128,15 +128,20 @@ class mysql_connection
 	{
 		if (isset($this->conn))
 		{
-			$result = array();
 			try 
 			{					
 				ini_set('max_execution_time', 2000);
 				$arr = mysqli_query($this->conn, $query_str);
-				while($val = mysqli_fetch_array($arr))
+				$query_type = explode(' ', $query_str);
+				if (strtoupper($query_type[0]) == 'SELECT')
 				{
-					array_push($result, $val);
-				}			
+					$result = array();
+					while($val = mysqli_fetch_array($arr))
+					{
+						array_push($result, $val);
+					}
+					return $result;
+				}						
 			}
 			catch (Exception $e)
 			{
@@ -144,7 +149,7 @@ class mysql_connection
 			}
 			finally
 			{
-				return $result;//$data[];
+				//$data[];
 			}
 		}		
 	}
