@@ -11,19 +11,19 @@ if ($_SESSION['root'] == 1)
 
 $otdel=$_POST["otdel"];
 $top=$_POST["top"];
-$lmw="85px";//$_POST["lmw"];
-$namew="200px";//$_POST["namew"];
-$kolw="80px";//$_POST["kolw"];
-$rdw="80px";//$_POST["rdw"];
-$rmw="80px";//$_POST["rmw"];
-$emw="80px";//$_POST["emw"];
-$lsw="80px";//$_POST["lsw"];
-$topstockw="80px";//$_POST["topstockw"];
-$polkaw="80px";//$_POST["polkaw"];
-$capacityw="80px";//$_POST["capacityw"];
-$freeplacew="80px";//$_POST["freeplacew"];
-$avg_salew="80px";//$_POST["avg_salew"];
-$zapasw="80x";//$_POST["zapasw"];
+$lmw=$_POST["lmw"];
+$namew=$_POST["namew"];
+$kolw=$_POST["kolw"];
+$rdw=$_POST["rdw"];
+$rmw=$_POST["rmw"];
+$emw=$_POST["emw"];
+$lsw=$_POST["lsw"];
+$topstockw=$_POST["topstockw"];
+$polkaw=$_POST["polkaw"];
+$facew=$_POST["capacityw"];
+$freeplacew=$_POST["freeplacew"];
+$avg_salew=$_POST["avg_salew"];
+$zapasw=$_POST["zapasw"];
 //============подключение к MS SQL===================================================
 $mssql = connect_to_mssql('config.ini');
 //-----------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ $curdate=date("Ymd");
 $lastdate=date("Ymd",strtotime("-1 month"));
 $daysbetween = abs(strtotime($curdate) - strtotime($lastdate)) / (3600 * 24); 
 
-$query_str = ("SELECT pr.product_code as lm, name.short_name as name, (ISNULL(stock_rd.kol, 0) + ISNULL(stock_rm.kol, 0) + ISNULL(stock_em.kol, 0) + ISNULL(stock_ls.kol, 0)) as kol,ISNULL(stock_rd.kol, 0) as rd, ISNULL(stock_rm.kol, 0) as rm, ISNULL(stock_em.kol, 0) as em, ISNULL(stock_ls.kol, 0) as ls, ISNULL(AVG_SALE.avg_sale, 0) as avg_sale 
+$query_str = ("SELECT TOP 50 pr.product_code as lm, name.short_name as name, (ISNULL(stock_rd.kol, 0) + ISNULL(stock_rm.kol, 0) + ISNULL(stock_em.kol, 0) + ISNULL(stock_ls.kol, 0)) as kol,ISNULL(stock_rd.kol, 0) as rd, ISNULL(stock_rm.kol, 0) as rm, ISNULL(stock_em.kol, 0) as em, ISNULL(stock_ls.kol, 0) as ls, ISNULL(AVG_SALE.avg_sale, 0) as avg_sale 
 				FROM LMXPERT.dbo.lm_artmag as art
 				LEFT JOIN xpert.dbo.product pr ON pr.product_id=art.product_id
 				LEFT JOIN XPERT.dbo.product_group prod_g on prod_g.product_group_id=pr.level1_id
@@ -50,16 +50,53 @@ $query_str = ("SELECT pr.product_code as lm, name.short_name as name, (ISNULL(st
 
 $result = $mssql->sql_query($query_str);
 
-foreach ($result as $row)
-{
-	foreach ($row as $val)
+
+$out = '';
+$out .= '<table class = "contable">';
+foreach ($result as $arr=>$row)
+{	
+	$query_str = ('SELECT IFNULL(cap.kol, 0) as face, IFNULL(stock.kol, 0) as top_stocks, (' . $row['ls'] . ' - IFNULL(SUM(stock.kol), 0)) as polka, IFNULL(cap.kol, 0) - (' . $row['ls'] . ' - IFNULL(SUM(stock.kol), 0)) as freeplace, ((' . $row['ls'] . ' - IFNULL(SUM(stock.kol), 0)) / ' . round($row['avg_sale'], 1) . ') as zapas
+						FROM leroy_stocksreport.capacity as cap
+						LEFT JOIN (SELECT lm, kol FROM leroy_stocks.stocks WHERE otdel = ' . $otdel . ') stock ON stock.lm = ' . $row['lm'] . '
+						WHERE cap.lm = '. $row['lm']);
+	
+	$result2 = $mysqli->sql_query($query_str);
+	
+	foreach ($result2 as $arr2=>$row2)
 	{
-		echo iconv("windows-1251", "UTF-8", $val);
+		$face = $row2['face'];
+		$top_stocks = $row2['top_stocks'];
+		$polka = round($row2['polka'], 1);
+		$freeplace = round($row2['freeplace'], 1);
+		$zapas = round($row2['zapas'], 1);
 	}
 	
+	if ($arr%2==0){
+		$bgcolor="#dedede";
+	}
+	else{
+		$bgcolor="#ffffff";
+	}
+	
+	$out .= '<tr bgcolor = ' . $bgcolor . ' class = "rowel">';
+	$out .= '<td width = ' . $lmw . '>' . trim($row['lm']) . '</td>';
+	$out .= '<td width = ' . $namew . '>' . iconv("windows-1251", "UTF-8", $row['name']) . '</td>';
+	$out .= '<td width = ' . $kolw . '>' . round($row['kol'], 2) . '</td>';
+	$out .= '<td width = ' . $rdw . '>' . round($row['rd'], 2) . '</td>';
+	$out .= '<td width = ' . $rmw . '>' . round($row['rm'], 2) . '</td>';
+	$out .= '<td width = ' . $emw . '>' . round($row['em'], 2) . '</td>';
+	$out .= '<td width = ' . $lsw . '>' . round($row['ls'], 2) . '</td>';
+	$out .= '<td width = ' . $topstockw . '>' . $top_stocks . '</td>';
+	$out .= '<td width = ' . $polkaw . '>' . $polka . '</td>';
+	$out .= '<td width = ' . $facew . '>' . $face . '</td>';
+	$out .= '<td width = ' . $freeplacew . '>' . $freeplace . '</td>';		
+	$out .= '<td width = ' . $avg_salew . '>' . round($row['avg_sale'], 1) . '</td>';
+	$out .= '<td width = ' . $zapasw . '>' . $zapas . '</td>';
+	$out .= '</tr>';
 }
-
-$i=0;
+$out .= '</table>';
+echo $out;
+// $i=0;
 /* while ($result=mssql_fetch_array($sql)){
 	$query_str2 = '';
 	$lm = $result["lm"];
@@ -71,10 +108,7 @@ $i=0;
 	$ls = $result["ls"];
 	$avg_sale = round($result["avg_sale"], 2);
 		
-	$sql2 = mysqli_query('SELECT IFNULL(cap.kol, 0) as capacity, IFNULL(stock.kol, 0) as top_stocks, (' . $ls . ' - IFNULL(SUM(stock.kol), 0)) as polka, IFNULL(cap.kol, 0) - (' . $ls . ' - IFNULL(SUM(stock.kol), 0)) as freeplace, ((' . $ls . ' - IFNULL(SUM(stock.kol), 0)) / ' . $avg_sale . ') as zapas
-						FROM leroy_stocksreport.capacity as cap
-						LEFT JOIN (SELECT lm, kol FROM leroy_stocks.stocks WHERE otdel = ' . $otdel . ') stock ON stock.lm = ' . $lm . '
-						WHERE cap.lm = '. $lm);
+	$sql2 = mysqli_query;
 	
 	$top_stocks=mysqli_fetch_array($sql2);
 	
@@ -95,7 +129,7 @@ $i=0;
 	$i++;
 } */
 
-$str='';
+/* $str='';
 $str = '<table class = "contable">';
 for ($k=0; $k<count($rep); $k++){
 	if ($k%2==0){
@@ -113,7 +147,7 @@ for ($k=0; $k<count($rep); $k++){
 	{
 		$cap = "<td width=".$capacityw."><div id='cap".$k."'>".$rep[$k]["capacity"]."</div></td>";
 	}
-	
+	 */
 /* 	$str=$str."<div id='row".$k."' class='rowel'>
 		<table style='background: ".$bgcolor.";'><tr height='16px'>
 		<td width=".$lmw."><div id='lm".$k."'>".trim($rep[$k]["lm"])."</div></td>
@@ -132,7 +166,7 @@ for ($k=0; $k<count($rep); $k++){
 		</tr></table></div>";	 */
 	
 	
-	$str=$str."<tr bgcolor='" . $bgcolor . "' class = 'rowel'>
+/* 	$str=$str."<tr bgcolor='" . $bgcolor . "' class = 'rowel'>
 		<td width=".$lmw."><div id='lm".$k."'>".trim($rep[$k]["lm"])."</div></td>
 		<td width=".$namew."><div id='name".$k."'>".iconv("cp1251","UTF8",$rep[$k]["name"])."</div></td>
 		<td width=".$kolw."><div id='kol".$k."'>".$rep[$k]["kol"]."</div></td>
@@ -152,7 +186,7 @@ for ($k=0; $k<count($rep); $k++){
 		
 }
 $str = $str . '</table>';	
-echo $str;
+echo $str; */
 echo ("<script>$('#footer').html('".$k." артикула(ов)')</script>");				
 				
 
