@@ -106,6 +106,7 @@ class mysql_connection
 	var $database;
 	var $user;
 	var $userPW;
+	var $conn;
 	function get_params($ini_file)
 	{
 		$params_arr = parse_ini_file($ini_file);
@@ -117,11 +118,37 @@ class mysql_connection
 	
 	function set_connection()
 	{
-		$link = mysqli_connect($this->server, $this->user, $this->userPW, $this->database) or die("Невозможно подключиться к серверу MySQL!");
-		mysqli_query($link, "SET NAMES 'utf8'");
+		$this->conn = mysqli_connect($this->server, $this->user, $this->userPW, $this->database) or die("Невозможно подключиться к серверу MySQL!");
+		mysqli_query($this->conn, "SET NAMES 'utf8'");
 		ini_set('max_execution_time', 720);
-		return $link;
+		return $this->conn;
 	}
+	
+	function sql_query($query_str)
+	{
+		if (isset($this->conn))
+		{
+			$result = array();
+			try 
+			{					
+				ini_set('max_execution_time', 2000);
+				$arr = mysqli_query($this->conn, $query_str);
+				while($val = mysqli_fetch_array($arr))
+				{
+					array_push($result, $val);
+				}			
+			}
+			catch (Exception $e)
+			{
+				echo 'Ошибка при выполнении запроса' . $e->getmessage() . '\n';
+			}
+			finally
+			{
+				return $result;//$data[];
+			}
+		}		
+	}
+	
 }
 
 function connect_to_ldap($user, $userPW, $ini_file)
