@@ -20,7 +20,7 @@ $emw=$_POST["emw"];
 $lsw=$_POST["lsw"];
 $topstockw=$_POST["topstockw"];
 $polkaw=$_POST["polkaw"];
-$facew=$_POST["capacityw"];
+$facew=$_POST["facew"];
 $freeplacew=$_POST["freeplacew"];
 $avg_salew=$_POST["avg_salew"];
 $zapasw=$_POST["zapasw"];
@@ -35,7 +35,7 @@ $curdate=date("Ymd");
 $lastdate=date("Ymd",strtotime("-1 month"));
 $daysbetween = abs(strtotime($curdate) - strtotime($lastdate)) / (3600 * 24); 
 
-$query_str = ("SELECT TOP 50 pr.product_code as lm, name.short_name as name, (ISNULL(stock_rd.kol, 0) + ISNULL(stock_rm.kol, 0) + ISNULL(stock_em.kol, 0) + ISNULL(stock_ls.kol, 0)) as kol,ISNULL(stock_rd.kol, 0) as rd, ISNULL(stock_rm.kol, 0) as rm, ISNULL(stock_em.kol, 0) as em, ISNULL(stock_ls.kol, 0) as ls, ISNULL(AVG_SALE.avg_sale, 0) as avg_sale 
+$query_str = ("SELECT TOP 30 pr.product_code as lm, name.short_name as name, (ISNULL(stock_rd.kol, 0) + ISNULL(stock_rm.kol, 0) + ISNULL(stock_em.kol, 0) + ISNULL(stock_ls.kol, 0)) as kol,ISNULL(stock_rd.kol, 0) as rd, ISNULL(stock_rm.kol, 0) as rm, ISNULL(stock_em.kol, 0) as em, ISNULL(stock_ls.kol, 0) as ls, ISNULL(AVG_SALE.avg_sale, 0) as avg_sale 
 				FROM LMXPERT.dbo.lm_artmag as art
 				LEFT JOIN xpert.dbo.product pr ON pr.product_id=art.product_id
 				LEFT JOIN XPERT.dbo.product_group prod_g on prod_g.product_group_id=pr.level1_id
@@ -52,7 +52,7 @@ $result = $mssql->sql_query($query_str);
 
 
 $out = '';
-$out .= '<table class = "contable">';
+$out .= '<table class = "table">';
 foreach ($result as $arr=>$row)
 {	
 	$query_str = ('SELECT IFNULL(cap.kol, 0) as face, IFNULL(stock.kol, 0) as top_stocks, (' . $row['ls'] . ' - IFNULL(SUM(stock.kol), 0)) as polka, IFNULL(cap.kol, 0) - (' . $row['ls'] . ' - IFNULL(SUM(stock.kol), 0)) as freeplace, ((' . $row['ls'] . ' - IFNULL(SUM(stock.kol), 0)) / ' . round($row['avg_sale'], 1) . ') as zapas
@@ -78,119 +78,38 @@ foreach ($result as $arr=>$row)
 		$bgcolor="#ffffff";
 	}
 	
-	$out .= '<tr bgcolor = ' . $bgcolor . ' class = "rowel">';
-	$out .= '<td width = ' . $lmw . '>' . trim($row['lm']) . '</td>';
-	$out .= '<td width = ' . $namew . '>' . iconv("windows-1251", "UTF-8", $row['name']) . '</td>';
-	$out .= '<td width = ' . $kolw . '>' . round($row['kol'], 2) . '</td>';
-	$out .= '<td width = ' . $rdw . '>' . round($row['rd'], 2) . '</td>';
-	$out .= '<td width = ' . $rmw . '>' . round($row['rm'], 2) . '</td>';
-	$out .= '<td width = ' . $emw . '>' . round($row['em'], 2) . '</td>';
-	$out .= '<td width = ' . $lsw . '>' . round($row['ls'], 2) . '</td>';
-	$out .= '<td width = ' . $topstockw . '>' . $top_stocks . '</td>';
-	$out .= '<td width = ' . $polkaw . '>' . $polka . '</td>';
-	$out .= '<td width = ' . $facew . '>' . $face . '</td>';
-	$out .= '<td width = ' . $freeplacew . '>' . $freeplace . '</td>';		
-	$out .= '<td width = ' . $avg_salew . '>' . round($row['avg_sale'], 1) . '</td>';
-	$out .= '<td width = ' . $zapasw . '>' . $zapas . '</td>';
-	$out .= '</tr>';
-}
-$out .= '</table>';
-echo $out;
-// $i=0;
-/* while ($result=mssql_fetch_array($sql)){
-	$query_str2 = '';
-	$lm = $result["lm"];
-	$name = $result["name"];
-	$kol = $result["kol"];
-	$rd = $result["rd"];
-	$rm = $result["rm"];
-	$em = $result["em"];
-	$ls = $result["ls"];
-	$avg_sale = round($result["avg_sale"], 2);
-		
-	$sql2 = mysqli_query;
-	
-	$top_stocks=mysqli_fetch_array($sql2);
-	
-	$rep[$i]["lm"]=$lm;
-	$rep[$i]["name"]=$name;
-	$rep[$i]["kol"] = $kol;
-	$rep[$i]["rd"] =$rd;
-	$rep[$i]["rm"] =$rm;
-	$rep[$i]["em"] =$em;
-	$rep[$i]["ls"] =$ls;
-	$rep[$i]["AVG_SALE"] = $avg_sale;
-	$rep[$i]["top_stocks"] =$top_stocks["top_stocks"];
-	$rep[$i]["polka"] = $top_stocks["polka"];
-	$rep[$i]["capacity"] =$top_stocks["capacity"];
-	$rep[$i]["freeplace"] = $top_stocks["freeplace"];
-	$rep[$i]["zapas"] = round($top_stocks["zapas"], 1);
-	
-	$i++;
-} */
-
-/* $str='';
-$str = '<table class = "contable">';
-for ($k=0; $k<count($rep); $k++){
-	if ($k%2==0){
-		$bgcolor="#dedede";
-	}
-	else{
-		$bgcolor="#ffffff";
-	}
-	
 	if ($root == 1)
 	{
-		$cap = "<td width=".$capacityw."><div><div id='".$k."position".$rep[$k]["lm"]."' ondblclick='addvmest(this)' tabindex='".$k."' style='outline: none;'><input type='number' class='cap".$k."' id='".$k."vmest".$rep[$k]["lm"]."' style='width:60px;' onblur='savevmest(this);' disabled value=".$rep[$k]["capacity"]."></input></div></div></td>";
+		$outface = '<td width = ' . $facew . '>
+					<div>
+						<div id="' . $arr . 'position' . $row['lm'] . '" ondblclick = "addface(this)" style = "outline: none;">
+							<input type = "number" id="' . $arr . 'face' . $row['lm'] . '" style = "width:60px;" onblur = "saveface(this);" disabled value = "' . $face .'"></input>
+						</div>
+					</div>
+				</td>';
 	}
 	else
 	{
-		$cap = "<td width=".$capacityw."><div id='cap".$k."'>".$rep[$k]["capacity"]."</div></td>";
+		$outface = '<td width = ' . $facew . '><div id="face' . $arr . '">' . $face . '</div></td>';
 	}
-	 */
-/* 	$str=$str."<div id='row".$k."' class='rowel'>
-		<table style='background: ".$bgcolor.";'><tr height='16px'>
-		<td width=".$lmw."><div id='lm".$k."'>".trim($rep[$k]["lm"])."</div></td>
-		<td width=".$namew."><div id='name".$k."'>".iconv("cp1251","UTF8",$rep[$k]["name"])."</div></td>
-		<td width=".$kolw."><div id='kol".$k."'>".$rep[$k]["kol"]."</div></td>
-		<td width=".$rdw."><div id='rd".$k."'>".$rep[$k]["rd"]."</div></td>
-		<td width=".$rmw."><div id='rm".$k."'>".$rep[$k]["rm"]."</div></td>
-		<td width=".$emw."><div id='em".$k."'>".$rep[$k]["em"]."</div></td>
-		<td width=".$lsw."><div id='ls".$k."'>".$rep[$k]["ls"]."</div></td>
-		<td width=".$topstockw."><div id='stock".$k."'>".$rep[$k]["top_stocks"]."</div></td>
-		<td width=".$polkaw."><div id='polka".$k."'>".$rep[$k]["polka"]."</div></td>"
-		. $cap .
-		"<td width=".$freeplacew."><div id='free".$k."'>".$rep[$k]["freeplace"]."</div></td>
-		<td width=".$avg_salew."><div id='sale".$k."'>".$rep[$k]["AVG_SALE"]."</div></td>
-		<td width=".$zapasw."><div id='zapas".$k."'>".$rep[$k]["zapas"]."</div></td>
-		</tr></table></div>";	 */
 	
-	
-/* 	$str=$str."<tr bgcolor='" . $bgcolor . "' class = 'rowel'>
-		<td width=".$lmw."><div id='lm".$k."'>".trim($rep[$k]["lm"])."</div></td>
-		<td width=".$namew."><div id='name".$k."'>".iconv("cp1251","UTF8",$rep[$k]["name"])."</div></td>
-		<td width=".$kolw."><div id='kol".$k."'>".$rep[$k]["kol"]."</div></td>
-		<td width=".$rdw."><div id='rd".$k."'>".$rep[$k]["rd"]."</div></td>
-		<td width=".$rmw."><div id='rm".$k."'>".$rep[$k]["rm"]."</div></td>
-		<td width=".$emw."><div id='em".$k."'>".$rep[$k]["em"]."</div></td>
-		<td width=".$lsw."><div id='ls".$k."'>".$rep[$k]["ls"]."</div></td>
-		<td width=".$topstockw."><div id='stock".$k."'>".$rep[$k]["top_stocks"]."</div></td>
-		<td width=".$polkaw."><div id='polka".$k."'>".$rep[$k]["polka"]."</div></td>"
-		. $cap .
-		"<td width=".$freeplacew."><div id='free".$k."'>".$rep[$k]["freeplace"]."</div></td>
-		<td width=".$avg_salew."><div id='sale".$k."'>".$rep[$k]["AVG_SALE"]."</div></td>
-		<td width=".$zapasw."><div id='zapas".$k."'>".$rep[$k]["zapas"]."</div></td>
-		</tr>";	
-		
-	
-		
+	$out .= '<tr bgcolor = ' . $bgcolor . ' class = "rowel" id = "row' . $arr . '">';
+	$out .= '<td width = ' . $lmw . '><div id = "lm' . $arr . '">' . trim($row['lm']) . '</div></td>';
+	$out .= '<td width = ' . $namew . '><div id = "name' . $arr . '">' . iconv("windows-1251", "UTF-8", $row['name']) . '</div></td>';
+	$out .= '<td width = ' . $kolw . '><div id = "kol' . $arr . '">' . round($row['kol'], 2) . '</div></td>';
+	$out .= '<td width = ' . $rdw . '><div id = "rd' . $arr .'">' . round($row['rd'], 2) . '</div></td>';
+	$out .= '<td width = ' . $rmw . '><div id = "rm' . $arr . '">' . round($row['rm'], 2) . '</div></td>';
+	$out .= '<td width = ' . $emw . '><div id = "em' . $arr . '">' . round($row['em'], 2) . '</div></td>';
+	$out .= '<td width = ' . $lsw . '><div id = "ls' . $arr . '">' . round($row['ls'], 2) . '</div></td>';
+	$out .= '<td width = ' . $topstockw . '><div id = "stock' . $arr . '">' . $top_stocks . '</div></td>';
+	$out .= '<td width = ' . $polkaw . '><div id = "polka' . $arr. '">' . $polka . '</div></td>';
+	$out .= $outface;
+	$out .= '<td width = ' . $freeplacew . '><div id = "free' . $arr. '">' . $freeplace . '</div></td>';		
+	$out .= '<td width = ' . $avg_salew . '><div id = "sale' . $arr . '">' . round($row['avg_sale'], 1) . '</div></td>';
+	$out .= '<td width = ' . $zapasw . '><div id = "zapas' . $arr . '">' . $zapas . '</div></td>';
+	$out .= '</tr>';
 }
-$str = $str . '</table>';	
-echo $str; */
-echo ("<script>$('#footer').html('".$k." артикула(ов)')</script>");				
-				
+$out .= '</table>';
 
-
-
-
+echo $out;
 ?>
