@@ -90,7 +90,7 @@ foreach ($result as $arr=>$row)
 	}
 	else
 	{
-		$outface = '<td width = ' . $facew . '><div class="face' . $arr . '">' . $face . '</div></td>';
+		$outface = '<td width = ' . $facew . '><div id="face' . $arr . '">' . $face . '</div></td>';
 	}
 	
 	$out .= '<tr bgcolor = ' . $bgcolor . ' class = "rowel" id = "row' . $arr . '">';
