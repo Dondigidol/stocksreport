@@ -98,8 +98,7 @@ else
 	<body align="center">
 <?php
 //ширина столбцов
-//$topw='50px';
-$lmw='85px';
+$lmw='70px';
 $namew='200px';
 $kolw='80px';
 $rdw='80px';
@@ -115,11 +114,11 @@ $zapasw='80px';
 //-----------------
 
 function sel($con){
-	echo "<select class='filters' id='".$con."' onchange='change()'>"
+	echo "<select id='".$con."' onchange='change()'>"
 		."	<option></option>"
-		."	<option>больше</option>"
-		."	<option>меньше</option>"
-		."	<option>равно</option>"
+		."	<option>></option>"
+		."	<option><</option>"
+		."	<option>=</option>"
 		."</select>";
 }
 
@@ -231,19 +230,19 @@ function sel($con){
 			<td><?php sel("conZapas");?></td>
 		</tr>
 		<tr style='background: #cbd6f7;'>
-			<td><input type=number style='width: 75px;' id='film' oninput='change()'></input></td>
-			<td><input type=text style='width: 190px;' id='finame' oninput='change()'></input></td>
-			<td><input type=number id='fikol' oninput='change()'></td>
-			<td><input type=number id='fird' oninput='change()'></td>
-			<td><input type=number id='firm' oninput='change()'></td>
-			<td><input type=number id='fiem' oninput='change()'></td>
-			<td><input type=number id='fils' oninput='change()'></td>
-			<td><input type=number id='fistock' oninput='change()'></td>
-			<td><input type=number id='fipolka' oninput='change()'></td>
-			<td><input type=number id='fiface' oninput='change()'></td>
-			<td><input type=number id='fifree' oninput='change()'></td>
-			<td><input type=number id='fisale'oninput='change()'></td>
-			<td><input type=number id='fizapas' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $lmw)[0])-6); ?>px' id='film' oninput='change()'></input></td>
+			<td><input type=text style='width: <?php echo (((int)explode('px', $namew)[0])-6); ?>px' id='finame' oninput='change()'></input></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $kolw)[0])-6); ?>px' id='fikol' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $rdw)[0])-6); ?>px' id='fird' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $rmw)[0])-6); ?>px' id='firm' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $emw)[0])-6); ?>px' id='fiem' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $lsw)[0])-6); ?>px' id='fils' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $topstockw)[0])-6); ?>px' id='fistock' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $polkaw)[0])-6); ?>px' id='fipolka' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $facew)[0])-6); ?>px' id='fiface' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $freeplacew)[0])-6); ?>px' id='fifree' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $avg_salew)[0])-6); ?>px' id='fisale'oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $zapasw)[0])-6); ?>px' id='fizapas' oninput='change()'></td>
 		</tr>
 		</table>
 </div>
@@ -298,7 +297,8 @@ $(function () {
 });
 
 $(document).ready(function(){
-	$("#main").css({"height":$(document).height() - $("#menupanel").height() - $("#footer").height() + "px"});
+	$("#main").css({"height":$(document).height() - $("#menupanel").height() - $("#footer").height() + "px", "width":$("#tableheader").width() + "px"});
+	$("#tableheader").css({"width":$(".table").width() + 17 + "px"});
 	$("#tablecontent").css({"height":$("#main").height() - $("#tableheader").height() + "px", "width":$("#tableheader").width() + "px"});
 	$(".modal_bg, .modal_window").hide();
 });
@@ -309,13 +309,13 @@ function oper(oper, val)
 	{
 		switch(oper)
 		{
-			case 'больше':
+			case '>':
 				return '>' + val;
 				break;
-			case 'меньше':
+			case '<':
 				return '<' + val;
 				break;
-			case 'равно':
+			case '=':
 				return '=' + val;
 				break;
 			default:
@@ -449,11 +449,11 @@ function qwe(op1, op2, oper)
 	if (op2!=""){
 		op1 = parseFloat(op1);
 		op2 = parseFloat(op2);
-		if (oper=="равно"){
+		if (oper=="="){
 			var res = op1==op2;
-		}else if (oper=="больше"){
+		}else if (oper==">"){
 			var res = op1 > op2;
-		}else if(oper=="меньше"){
+		}else if(oper=="<"){
 			var res = op1<op2;
 		}else res=true;
 	} else {
@@ -480,6 +480,7 @@ function change()
 	var conzapas=$("#conZapas").val();
 	
 	
+	
 	var film=$("#film").val();
 	var finame=$("#finame").val();
 	var fikol=$("#fikol").val();
@@ -493,6 +494,7 @@ function change()
 	var fifree=$("#fifree").val();
 	var fisale=$("#fisale").val();
 	var fizapas=$("#fizapas").val();
+	
 	
 	var templm;
 	var tempname;
@@ -521,7 +523,7 @@ function change()
 		templs=$("#ls"+i).html();
 		tempstock=$("#stock"+i).html();
 		temppolka=$("#polka"+i).html();
-		tempface=$("#face"+i).val();
+		tempface=$(".face"+i).val();
 		tempfree=$("#free"+i).html();
 		tempsale=$("#sale"+i).html();
 		tempzapas=$("#zapas"+i).html();
