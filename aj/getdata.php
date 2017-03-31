@@ -83,14 +83,14 @@ foreach ($result as $arr=>$row)
 		$outface = '<td width = ' . $facew . '>
 					<div>
 						<div id="' . $arr . 'position' . $row['lm'] . '" ondblclick = "addface(this)" style = "outline: none;">
-							<input type = "number" id="' . $arr . 'face' . $row['lm'] . '" style = "width:60px;" onblur = "saveface(this);" disabled value = "' . $face .'"></input>
+							<input type = "number" class = "face' . $arr . '" id="' . $arr . 'face' . $row['lm'] . '" style = "width:60px;" onblur = "saveface(this);" disabled value = "' . $face .'"></input>
 						</div>
 					</div>
 				</td>';
 	}
 	else
 	{
-		$outface = '<td width = ' . $facew . '><div id="face' . $arr . '">' . $face . '</div></td>';
+		$outface = '<td width = ' . $facew . '><div class="face' . $arr . '">' . $face . '</div></td>';
 	}
 	
 	$out .= '<tr bgcolor = ' . $bgcolor . ' class = "rowel" id = "row' . $arr . '">';
