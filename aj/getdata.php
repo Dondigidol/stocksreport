@@ -13,6 +13,9 @@ $otdel=$_POST["otdel"];
 $top=$_POST["top"];
 $lmw=$_POST["lmw"];
 $namew=$_POST["namew"];
+$groupw = $_POST['groupw'];
+$typew = $_POST['typew'];
+$subtypew = $_POST['subtypew'];
 $kolw=$_POST["kolw"];
 $rdw=$_POST["rdw"];
 $rmw=$_POST["rmw"];
@@ -83,7 +86,7 @@ foreach ($result as $arr=>$row)
 		$outface = '<td width = ' . $facew . '>
 					<div>
 						<div id="' . $arr . 'position' . $row['lm'] . '" ondblclick = "addface(this)" style = "outline: none;">
-							<input type = "number" class = "face' . $arr . '" id="' . $arr . 'face' . $row['lm'] . '" style = "width:60px;" onblur = "saveface(this);" disabled value = "' . $face .'"></input>
+							<input type = "number" class = "face' . $arr . '" id="' . $arr . 'face' . $row['lm'] . '" style = "width:' . (((int)explode('px', $facew)[0])-6) . 'px" onblur = "saveface(this);" disabled value = "' . $face .'"></input>
 						</div>
 					</div>
 				</td>';
@@ -96,6 +99,9 @@ foreach ($result as $arr=>$row)
 	$out .= '<tr bgcolor = ' . $bgcolor . ' class = "rowel" id = "row' . $arr . '">';
 	$out .= '<td width = ' . $lmw . '><div id = "lm' . $arr . '">' . trim($row['lm']) . '</div></td>';
 	$out .= '<td width = ' . $namew . '><div id = "name' . $arr . '">' . iconv("windows-1251", "UTF-8", $row['name']) . '</div></td>';
+	$out .= '<td width = ' . $groupw . '><div id = "group' . $arr . '"></div></td>';
+	$out .= '<td width = ' . $typew . '><div id = "type' . $arr . '"></div></td>';
+	$out .= '<td width = ' . $subtypew . '><div id = "subtype' . $arr . '"></div></td>';
 	$out .= '<td width = ' . $kolw . '><div id = "kol' . $arr . '">' . round($row['kol'], 2) . '</div></td>';
 	$out .= '<td width = ' . $rdw . '><div id = "rd' . $arr .'">' . round($row['rd'], 2) . '</div></td>';
 	$out .= '<td width = ' . $rmw . '><div id = "rm' . $arr . '">' . round($row['rm'], 2) . '</div></td>';
