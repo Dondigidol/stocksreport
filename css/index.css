@@ -5,15 +5,12 @@ padding:0;
 
 #main {
 	display:block;
-	width:1198px;
-/* 	height:800px;  */
 	margin: 0 auto;
 	text-align: left;
 }
 
 #menupanel {
 	height: 40px;
-	/* margin-top: -10px; */
 	background: #a0dea0;
 	margin: 0;
 }
@@ -28,12 +25,10 @@ padding:0;
 #tableheader {
 	float:left;
 	background: #9cb1f0;
-	width: 1198px;
 }
 
 .table {
 	border-collapse:collapse;	
-	/* width:1181px; */
 }
 
 .table td{
@@ -45,13 +40,12 @@ padding:0;
 }
 
 .table input{
-	width: 50px;
 	font: 10px Helvetica, Arial, sans-serif;
 }
 
-.filters {
-	width:70px;
-	font: 12px Helvetica, Arial, sans-serif;
+.table select{
+	/* width:70px; */
+	font: 10px Helvetica, Arial, sans-serif;
 }
 
 #tablecontent {
@@ -90,8 +84,6 @@ padding:0;
 .modal_window{
 	position:absolute;
 	display:none;
-	/* width:300px; */
-	/* left:50%; */
 	z-index:1100;
 	background:#ffffff;
 	text-align: center;
