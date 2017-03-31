@@ -100,17 +100,20 @@ else
 //ширина столбцов
 $lmw='70px';
 $namew='200px';
-$kolw='80px';
-$rdw='80px';
-$rmw='80px';
-$emw='80px';
-$lsw='80px';
-$topstockw='80px';
-$polkaw='80px';
-$facew='80px';
-$freeplacew='80px';
-$avg_salew='80px';
-$zapasw='80px';
+$groupw='60px';
+$typew='60px';
+$subtypew='60px';
+$kolw='60px';
+$rdw='60px';
+$rmw='60px';
+$emw='60px';
+$lsw='60px';
+$topstockw='60px';
+$polkaw='60px';
+$facew='60px';
+$freeplacew='60px';
+$avg_salew='60px';
+$zapasw='60px';
 //-----------------
 
 function sel($con){
@@ -195,9 +198,12 @@ function sel($con){
 		<tr style='background: #9cb1f0;'>			
 			<td rowspan=3 width='<?php echo $lmw;?>'>ЛМ</td>
 			<td rowspan=3 width='<?php echo $namew;?>'>Наименование</td>
+			<td rowspan=3 width='<?php echo $groupw;?>'>Группа</td>
+			<td rowspan=3 width='<?php echo $typew;?>'>Тип</td>
+			<td rowspan=3 width='<?php echo $subtypew;?>'>Подтип</td>
 			<td colspan=6>Размещение</td>
-			<td rowspan=3 width='<?php echo $polkaw;?>'>Полка</td>
-			<td rowspan=3 width='<?php echo $facew;?>'>Вместимость полки</td>
+			<td rowspan=3 width='<?php echo $polkaw;?>'>На полке</td>
+			<td rowspan=3 width='<?php echo $facew;?>'>Кол-во в одном фейсе</td>
 			<td rowspan=3 width='<?php echo $freeplacew;?>'>Кол-во свободного места, шт.</td>
 			<td rowspan=3 width='<?php echo $avg_salew;?>'>Среднедневная продажа</td>
 			<td rowspan=3 width='<?php echo $zapasw;?>'>Запас в днях на полке</td>
@@ -217,6 +223,9 @@ function sel($con){
 		<tr style='background: #cbd6f7; '>
 			<td>=</td>
 			<td>содержит</td>
+			<td><?php sel("conGroup");?></td>
+			<td><?php sel("conType");?></td>
+			<td><?php sel("conSubtype");?></td>
 			<td><?php sel("conKol");?></td>
 			<td><?php sel("conRd");?></td>
 			<td><?php sel("conRm");?></td>
@@ -232,6 +241,9 @@ function sel($con){
 		<tr style='background: #cbd6f7;'>
 			<td><input type=number style='width: <?php echo (((int)explode('px', $lmw)[0])-6); ?>px' id='film' oninput='change()'></input></td>
 			<td><input type=text style='width: <?php echo (((int)explode('px', $namew)[0])-6); ?>px' id='finame' oninput='change()'></input></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $groupw)[0])-6); ?>px' id='figroup' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $typew)[0])-6); ?>px' id='fitype' oninput='change()'></td>
+			<td><input type=number style='width: <?php echo (((int)explode('px', $subtypew)[0])-6); ?>px' id='fisubtype' oninput='change()'></td>
 			<td><input type=number style='width: <?php echo (((int)explode('px', $kolw)[0])-6); ?>px' id='fikol' oninput='change()'></td>
 			<td><input type=number style='width: <?php echo (((int)explode('px', $rdw)[0])-6); ?>px' id='fird' oninput='change()'></td>
 			<td><input type=number style='width: <?php echo (((int)explode('px', $rmw)[0])-6); ?>px' id='firm' oninput='change()'></td>
@@ -334,6 +346,9 @@ function exportData()
 	var top=$("#top").val();
 	var film = $("#film").val();
 	var finame = $("#finame").val();
+	var figroup = oper($("#conGroup").val(), $("#figroup").val());
+	var figroup = oper($("#conType").val(), $("#fitype").val());
+	var figroup = oper($("#conSubtype").val(), $("#fisubtype").val());
 	var fikol = oper($("#conKol").val(), $("#fikol").val());
 	var fird = oper($("#conRd").val(), $("#fird").val());
 	var firm = oper($("#conRm").val(), $("#firm").val());
@@ -346,7 +361,7 @@ function exportData()
 	var fisale = oper($("#conSale").val(), $("#fisale").val());
 	var fizapas = oper($("#conZapas").val(), $("#fizapas").val());
 
-	document.location.href="aj/downloadreport.php?otdel=" + otdel + "&top=" + top + "&film=" + film + "&finame=" + finame + "&fikol=" + fikol + "&fird=" + fird + "&firm=" + firm + "&fiem=" + fiem + "&fils=" + fils + "&fistock=" + fistock + "&fipolka=" + fipolka + "&fiface=" + fiface + "&fifree=" + fifree + "&fisale=" + fisale + "&fizapas=" + fizapas;
+	document.location.href="aj/downloadreport.php?otdel=" + otdel + "&top=" + top + "&film=" + film + "&finame=" + finame + "&figroup=" + figroup + "&fitype=" + fitype + "&fisubtype=" + fisubtype + "&fikol=" + fikol + "&fird=" + fird + "&firm=" + firm + "&fiem=" + fiem + "&fils=" + fils + "&fistock=" + fistock + "&fipolka=" + fipolka + "&fiface=" + fiface + "&fifree=" + fifree + "&fisale=" + fisale + "&fizapas=" + fizapas;
 
 	
 }
@@ -370,6 +385,9 @@ function getData()
 		"topw": "<?php echo $topw;?>", 
 		"lmw": "<?php echo $lmw;?>",
 		"namew": "<?php echo $namew;?>", 
+		"groupw": "<?php echo $groupw;?>",
+		"typew": "<?php echo $typew;?>",
+		"subtypew": "<?php echo $subtypew;?>",
 		"kolw": "<?php echo $kolw;?>", 
 		"rdw": "<?php echo $rdw;?>", 
 		"rmw": "<?php echo $rmw;?>",
@@ -467,6 +485,9 @@ function qwe(op1, op2, oper)
 function change()
 {
 	// получаем значения select у столбцов с количеством
+	var congroup=$("#conGroup").val();
+	var congroup=$("#conType").val();
+	var congroup=$("#conSubtype").val();
 	var conkol=$("#conKol").val();
 	var conrd=$("#conRd").val();
 	var conrm=$("#conRm").val();
@@ -483,6 +504,9 @@ function change()
 	
 	var film=$("#film").val();
 	var finame=$("#finame").val();
+	var fifroup=$("#figroup").val();
+	var fifroup=$("#fitype").val();
+	var fifroup=$("#fisubtype").val();
 	var fikol=$("#fikol").val();
 	var fird=$("#fird").val();
 	var firm=$("#firm").val();
@@ -498,6 +522,9 @@ function change()
 	
 	var templm;
 	var tempname;
+	var tempgroup;
+	var temptype;
+	var tempsubtype;
 	var tempkol;
 	var temprd;
 	var temprm;
@@ -516,6 +543,9 @@ function change()
 	for (var i=0; i<rows.length; i++){
 		templm=$("#lm"+i).html();
 		tempname=$("#name"+i).html();
+		tempgroup=$("#group"+i).html();
+		tempgroup=$("#type"+i).html();
+		tempgroup=$("#subtype"+i).html();
 		tempkol=$("#kol"+i).html();
 		temprd=$("#rd"+i).html();
 		temprm=$("#rm"+i).html();
@@ -523,13 +553,24 @@ function change()
 		templs=$("#ls"+i).html();
 		tempstock=$("#stock"+i).html();
 		temppolka=$("#polka"+i).html();
-		tempface=$(".face"+i).val();
+		if ($("input").is(".face"+i))
+		{
+			tempface=$(".face"+i).val();
+		}
+		else
+		{
+			tempface=$("#face"+i).html();
+		}
+		
 		tempfree=$("#free"+i).html();
 		tempsale=$("#sale"+i).html();
 		tempzapas=$("#zapas"+i).html();
 		
 		if ((templm.indexOf(film)!=-1) // поиск по лм
 			&& (tempname.toLowerCase().indexOf(finame.toLowerCase())!=-1) // поиск по наименованию
+			&& (qwe(tempgroup, figroup, congroup)==true) //поиск по товарной группе
+			&& (qwe(temptype, fitype, contype)==true) //поиск по товарному типу
+			&& (qwe(tempsubtype, fisubtype, consubtype)==true) //поиск по товарному подтипу
 			&& (qwe(tempkol, fikol, conkol)==true) //поиск по общему количеству
 			&& (qwe(temprd, fird, conrd)==true) //поиск по количеству rd
 			&& (qwe(temprm, firm, conrm)==true) //поиск по количеству rd
