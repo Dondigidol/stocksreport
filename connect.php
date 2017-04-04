@@ -64,7 +64,7 @@ class mssql_connection
 	{
 		try
 		{
-			$this->conn = odbc_connect('Driver={SQL Server};Server=' . $this->server . ';Database=' . $this->database . ';', $this->user, $this->userPW);
+			$this->conn = mssql_connect($this->server, $this->user, $this->userPW);
 		
 		}
 		catch (Exception $e)
@@ -81,12 +81,12 @@ class mssql_connection
 			try 
 			{					
 				ini_set('max_execution_time', 2000);
-				$arr = odbc_exec($this->conn, $query_str);
+				$arr = mssql_query($query_str);
 				$query_type = explode(' ', $query_str);
 				if (strtoupper($query_type[0]) == 'SELECT')
 				{
 					$result = array();
-					while($val = odbc_fetch_array($arr))
+					while($val = mssql_fetch_array($arr))
 					{
 						array_push($result, $val);
 					}		
