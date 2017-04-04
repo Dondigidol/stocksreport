@@ -38,7 +38,7 @@ $curdate=date("Ymd");
 $lastdate=date("Ymd",strtotime("-1 month"));
 $daysbetween = abs(strtotime($curdate) - strtotime($lastdate)) / (3600 * 24); 
 
-$query_str = ("SELECT TOP 30 pr.product_code as lm, name.short_name as name, (ISNULL(stock_rd.kol, 0) + ISNULL(stock_rm.kol, 0) + ISNULL(stock_em.kol, 0) + ISNULL(stock_ls.kol, 0)) as kol,ISNULL(stock_rd.kol, 0) as rd, ISNULL(stock_rm.kol, 0) as rm, ISNULL(stock_em.kol, 0) as em, ISNULL(stock_ls.kol, 0) as ls, ISNULL(AVG_SALE.avg_sale, 0) as avg_sale 
+$query_str = ("SELECT pr.product_code as lm, name.short_name as name, (ISNULL(stock_rd.kol, 0) + ISNULL(stock_rm.kol, 0) + ISNULL(stock_em.kol, 0) + ISNULL(stock_ls.kol, 0)) as kol,ISNULL(stock_rd.kol, 0) as rd, ISNULL(stock_rm.kol, 0) as rm, ISNULL(stock_em.kol, 0) as em, ISNULL(stock_ls.kol, 0) as ls, ISNULL(AVG_SALE.avg_sale, 0) as avg_sale 
 				FROM LMXPERT.dbo.lm_artmag as art
 				LEFT JOIN xpert.dbo.product pr ON pr.product_id=art.product_id
 				LEFT JOIN XPERT.dbo.product_group prod_g on prod_g.product_group_id=pr.level1_id
@@ -99,9 +99,9 @@ foreach ($result as $arr=>$row)
 	$out .= '<tr bgcolor = ' . $bgcolor . ' class = "rowel" id = "row' . $arr . '">';
 	$out .= '<td width = ' . $lmw . '><div id = "lm' . $arr . '">' . trim($row['lm']) . '</div></td>';
 	$out .= '<td width = ' . $namew . '><div id = "name' . $arr . '">' . iconv("windows-1251", "UTF-8", $row['name']) . '</div></td>';
-	$out .= '<td width = ' . $groupw . '><div id = "group' . $arr . '"></div></td>';
-	$out .= '<td width = ' . $typew . '><div id = "type' . $arr . '"></div></td>';
-	$out .= '<td width = ' . $subtypew . '><div id = "subtype' . $arr . '"></div></td>';
+	$out .= '<td width = ' . $groupw . '><div id = "group' . $arr . '">0</div></td>';
+	$out .= '<td width = ' . $typew . '><div id = "type' . $arr . '">0</div></td>';
+	$out .= '<td width = ' . $subtypew . '><div id = "subtype' . $arr . '">0</div></td>';
 	$out .= '<td width = ' . $kolw . '><div id = "kol' . $arr . '">' . round($row['kol'], 2) . '</div></td>';
 	$out .= '<td width = ' . $rdw . '><div id = "rd' . $arr .'">' . round($row['rd'], 2) . '</div></td>';
 	$out .= '<td width = ' . $rmw . '><div id = "rm' . $arr . '">' . round($row['rm'], 2) . '</div></td>';
