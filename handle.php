@@ -347,8 +347,8 @@ function exportData()
 	var film = $("#film").val();
 	var finame = $("#finame").val();
 	var figroup = oper($("#conGroup").val(), $("#figroup").val());
-	var figroup = oper($("#conType").val(), $("#fitype").val());
-	var figroup = oper($("#conSubtype").val(), $("#fisubtype").val());
+	var fitype = oper($("#conType").val(), $("#fitype").val());
+	var fisubtype = oper($("#conSubtype").val(), $("#fisubtype").val());
 	var fikol = oper($("#conKol").val(), $("#fikol").val());
 	var fird = oper($("#conRd").val(), $("#fird").val());
 	var firm = oper($("#conRm").val(), $("#firm").val());
@@ -486,8 +486,8 @@ function change()
 {
 	// получаем значения select у столбцов с количеством
 	var congroup=$("#conGroup").val();
-	var congroup=$("#conType").val();
-	var congroup=$("#conSubtype").val();
+	var contype=$("#conType").val();
+	var consubtype=$("#conSubtype").val();
 	var conkol=$("#conKol").val();
 	var conrd=$("#conRd").val();
 	var conrm=$("#conRm").val();
@@ -505,8 +505,8 @@ function change()
 	var film=$("#film").val();
 	var finame=$("#finame").val();
 	var fifroup=$("#figroup").val();
-	var fifroup=$("#fitype").val();
-	var fifroup=$("#fisubtype").val();
+	var fitype=$("#fitype").val();
+	var fisubtype=$("#fisubtype").val();
 	var fikol=$("#fikol").val();
 	var fird=$("#fird").val();
 	var firm=$("#firm").val();
@@ -544,8 +544,8 @@ function change()
 		templm=$("#lm"+i).html();
 		tempname=$("#name"+i).html();
 		tempgroup=$("#group"+i).html();
-		tempgroup=$("#type"+i).html();
-		tempgroup=$("#subtype"+i).html();
+		temptype=$("#type"+i).html();
+		tempsubtype=$("#subtype"+i).html();
 		tempkol=$("#kol"+i).html();
 		temprd=$("#rd"+i).html();
 		temprm=$("#rm"+i).html();
